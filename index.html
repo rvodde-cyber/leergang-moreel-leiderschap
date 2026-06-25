@@ -19,7 +19,11 @@
 
   <div class="nav-section">
     <div class="nav-section-label">Leertraject</div>
-    <button type="button" class="nav-item active" data-view="model">
+    <button type="button" class="nav-item active" data-view="welkom">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1V9.5z"/></svg>
+      Welkom
+    </button>
+    <button type="button" class="nav-item" data-view="model">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
       Het model
     </button>
@@ -76,7 +80,69 @@
 
 <main class="main">
 
-  <div class="view active" id="view-model">
+  <div class="view active" id="view-welkom">
+    <div class="welcome">
+      <p class="welcome-eyebrow">Leergang Moreel Leiderschap · Moreel Vakmanschap</p>
+      <h1 class="welcome-title">Van bewustzijn naar moedige praktijk</h1>
+      <p class="welcome-lead">
+        Moreel leiderschap is geen kwestie van regels kennen. Het is een vakmanschap dat je oefent, verfijnt en volhoudt —
+        voor professionals in zorg, onderwijs en de publieke sector die dagelijks beslissingen nemen waar geen handboek het antwoord op geeft.
+      </p>
+
+      <blockquote class="welcome-quote">
+        “Het gaat om je innerlijk kompas volgen, je eigen gevoel over wat goed en fout is. Met hoofd, hart en handen.”
+        <cite>— uit veldonderzoek onder ethische leiders</cite>
+      </blockquote>
+
+      <div class="welcome-grid">
+        <article class="welcome-card">
+          <h2>Wat is dit?</h2>
+          <p>
+            De digitale begeleider van de leergang <strong>Moreel Leiderschap</strong>. Een rustige plek naast de bijeenkomsten —
+            om te oefenen, te reflecteren en je eigen morele kompas te versterken. Geen toets, geen oordeel.
+          </p>
+        </article>
+        <article class="welcome-card">
+          <h2>Wat doet de app?</h2>
+          <p>
+            Houdt de leergang levend tussen de sessies: <strong>dagboek</strong>, <strong>moreel kompas</strong>,
+            <strong>groepsruimte</strong>, <strong>groei</strong> en instrumenten zoals Eerlijk Oordeel en de Morele Lakmoesproef.
+            De bijeenkomst zaait — de app houdt het levend — de volgende bijeenkomst oogst.
+          </p>
+        </article>
+        <article class="welcome-card">
+          <h2>Waarom?</h2>
+          <p>
+            De leergang leert je je innerlijk kompas te volgen — met hoofd, buik, hart, handen én ruggegraat.
+            Scherper waar te nemen, eerlijker af te wegen, moediger te handelen en steviger te blijven staan.
+            Niet vanuit theorie alleen, maar vanuit ervaring.
+          </p>
+        </article>
+      </div>
+
+      <div class="welcome-rhythm">
+        <span class="welcome-rhythm-step">Bijeenkomst</span>
+        <span class="welcome-rhythm-arrow" aria-hidden="true">→</span>
+        <span class="welcome-rhythm-step welcome-rhythm-step--accent">App</span>
+        <span class="welcome-rhythm-arrow" aria-hidden="true">→</span>
+        <span class="welcome-rhythm-step">Bijeenkomst</span>
+      </div>
+      <p class="welcome-rhythm-caption">
+        Drie dagdelen en een terugkomdag — deze app is je geheugen en oefenruimte onderweg.
+      </p>
+
+      <div class="welcome-actions">
+        <button type="button" class="btn btn-primary" id="btn-welcome-start">Ontdek het model</button>
+        <button type="button" class="btn" id="btn-welcome-programma">Bekijk het programma</button>
+      </div>
+
+      <p class="welcome-footnote">
+        Jouw reflecties blijven privé op dit apparaat. De groepsruimte is anoniem — alleen wat je zelf deelt, wordt gedeeld.
+      </p>
+    </div>
+  </div>
+
+  <div class="view" id="view-model">
     <h1 class="page-title">Het model</h1>
     <p class="page-sub">Moreel vakmanschap is geen eenmalige keuze, maar een voortdurende praktijk van zien, voelen, wegen, handelen en koers houden — ook wanneer iets op het spel staat. Klik op een stap voor verdieping.</p>
     <div class="model-flow" id="model-flow" role="tablist" aria-label="Vijf stappen"></div>

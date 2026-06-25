@@ -496,9 +496,16 @@ function init() {
   renderElemSelect();
   updateGroepDisplay();
 
+  document.getElementById("btn-welcome-start")?.addEventListener("click", () => {
+    showView("model", document.querySelector('.nav-item[data-view="model"]'));
+  });
+  document.getElementById("btn-welcome-programma")?.addEventListener("click", () => {
+    showView("programma", document.querySelector('.nav-item[data-view="programma"]'));
+  });
+
   const hash = location.hash.replace("#", "");
-  const valid = ["model", "programma", "terugkom", "dagboek", "dilemma", "groei", "groep"];
-  showView(valid.includes(hash) ? hash : "model");
+  const valid = ["welkom", "model", "programma", "terugkom", "dagboek", "dilemma", "groei", "groep"];
+  showView(valid.includes(hash) ? hash : "welkom");
 }
 
 document.addEventListener("DOMContentLoaded", init);

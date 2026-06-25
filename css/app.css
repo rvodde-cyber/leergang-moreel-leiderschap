@@ -147,6 +147,27 @@ a.nav-item{color:var(--muted)}
 .groei-bar-label{font-size:9px;color:var(--subtle);margin-top:4px}
 .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--text);color:#fff;padding:.65rem 1rem;border-radius:8px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:100}
 .toast.show{opacity:1}
+
+/* —— Welkom / landingspagina —— */
+.welcome{padding:.25rem 0 2rem;max-width:720px}
+.welcome-eyebrow{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--subtle);margin-bottom:.75rem}
+.welcome-title{font-family:var(--serif);font-size:clamp(1.75rem,4vw,2.25rem);font-weight:400;line-height:1.25;margin-bottom:1rem;color:var(--text)}
+.welcome-lead{font-size:15px;color:var(--muted);line-height:1.75;margin-bottom:1.75rem}
+.welcome-quote{margin:0 0 2rem;padding:1.25rem 1.5rem;background:linear-gradient(135deg,#f5f3ef 0%,#fafaf8 100%);border:1px solid var(--border);border-radius:var(--radius-lg);font-family:var(--serif);font-size:16px;font-style:italic;line-height:1.65;color:var(--text)}
+.welcome-quote cite{display:block;margin-top:.75rem;font-family:var(--sans);font-size:11px;font-style:normal;color:var(--subtle);letter-spacing:.02em}
+.welcome-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem}
+.welcome-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem 1.35rem}
+.welcome-card h2{font-family:var(--serif);font-size:15px;font-weight:500;margin-bottom:.5rem;color:var(--text)}
+.welcome-card p{font-size:13px;color:var(--muted);line-height:1.65}
+.welcome-card strong{color:var(--text);font-weight:500}
+.welcome-rhythm{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:.5rem 1rem;margin-bottom:.5rem}
+.welcome-rhythm-step{font-size:13px;font-weight:500;color:var(--muted);padding:.35rem .85rem;border-radius:20px;border:1px solid var(--border);background:var(--surface)}
+.welcome-rhythm-step--accent{background:var(--text);color:#fff;border-color:var(--text)}
+.welcome-rhythm-arrow{color:var(--subtle);font-size:14px}
+.welcome-rhythm-caption{text-align:center;font-size:12px;color:var(--subtle);margin-bottom:1.75rem;line-height:1.5}
+.welcome-actions{display:flex;flex-wrap:wrap;gap:.65rem;margin-bottom:1.5rem}
+.welcome-footnote{font-size:12px;color:var(--subtle);line-height:1.55;border-top:1px solid var(--border);padding-top:1.25rem}
+
 @media(max-width:700px){
   .shell{flex-direction:column}
   .nav{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--border)}
