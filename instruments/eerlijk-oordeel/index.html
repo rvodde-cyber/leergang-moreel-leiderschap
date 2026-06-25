@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eerlijk Oordeel — Waar sta jij als ethisch leider?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/eerlijk-oordeel.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="top-bar no-print">
+      <a href="../../index.html">← Moreel Leiderschap</a>
+      <button type="button" class="btn btn-ghost" id="btn-restart" style="padding:0.35rem 0.75rem;font-size:12px">Herstart</button>
+    </header>
+
+    <!-- Scherm 0: Landing -->
+    <section class="screen active" id="screen-landing">
+      <div id="landing-hero"></div>
+      <div class="landing-center">
+        <h1>Eerlijk Oordeel</h1>
+        <p class="subtitle">Waar sta jij als ethisch leider?</p>
+        <button type="button" class="btn btn-primary" id="btn-start">Begin het zelfonderzoek</button>
+      </div>
+      <p class="footer-note">
+        Dit instrument is gebaseerd op onderzoek naar ethisch leiderschap van Vera &amp; Den Hartog (2013), Heres (2012) en eigen veldonderzoek. De wetenschappelijke verantwoording staat op de achtergrond — wat telt is jouw eerlijke antwoord.
+      </p>
+    </section>
+
+    <!-- Scherm 1–5: Dimensies -->
+    <section class="screen" id="screen-dimension">
+      <div id="dim-progress"></div>
+      <div id="dim-hero"></div>
+      <div id="dim-content"></div>
+    </section>
+
+    <!-- Scherm 6: Resultaat -->
+    <section class="screen" id="screen-result">
+      <h1>Eerlijk Oordeel</h1>
+      <p class="result-intro">
+        Dit is jouw eerlijke zelfbeeld van vandaag. Niet goed of fout. Niet hoog of laag. Gewoon eerlijk — en dat is het begin.
+      </p>
+      <div class="chart-wrap">
+        <canvas id="radar-chart" width="400" height="400" aria-label="Spinnenwebdiagram van vijf dimensies"></canvas>
+      </div>
+      <div id="result-growth"></div>
+      <blockquote class="closing-quote">
+        Doubt is a sign of intelligence — the eternal doubt about whether you are doing the right thing.
+      </blockquote>
+      <div class="btn-row no-print">
+        <button type="button" class="btn btn-primary" id="btn-print">Sla op als PDF</button>
+        <button type="button" class="btn btn-ghost" id="btn-restart-result">Begin opnieuw</button>
+      </div>
+      <p class="verantwoording">
+        Dit instrument is ontwikkeld op basis van onderzoek naar ethisch leiderschap. De vijf dimensies zijn geworteld in: Vera &amp; Den Hartog (2013); Heres (2012); en eigen veldonderzoek naar de waarden en ervaringen van ethische leiders in de praktijk. Het model Hoofd–Buik–Hart–Handen–Ruggegraat is een eigen ontwikkeling, voortbouwend op deze bronnen.
+      </p>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="js/eerlijk-oordeel.js"></script>
+</body>
+</html>

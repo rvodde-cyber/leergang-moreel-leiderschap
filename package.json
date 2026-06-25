@@ -1,0 +1,7 @@
+{
+  "name": "leergang-moreel-leiderschap",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/generate-config.js"
+  }
+}

@@ -1,0 +1,15 @@
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.local
+js/config.js
+node_modules/
+dist/
+.vercel/
+
+# Tijdelijke Claude-exports (optioneel committen na review)
+docs/incoming/*.tmp
+
+# Beelden wel committen voor deploy
+!instruments/eerlijk-oordeel/beelden/*.jpg
