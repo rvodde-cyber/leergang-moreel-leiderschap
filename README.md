@@ -13,6 +13,15 @@ npx serve .
 
 Open `http://localhost:3000` — of dubbelklik `index.html`.
 
+## Live (Vercel)
+
+| Wat | URL |
+|-----|-----|
+| **Hoofdapp** | https://leergang-moreel-leiderschap.vercel.app/ |
+| **Eerlijk Oordeel** | https://leergang-moreel-leiderschap.vercel.app/instruments/eerlijk-oordeel/ |
+
+Dashboard: https://vercel.com/rvodde-1442s-projects/leergang-moreel-leiderschap
+
 ## Configuratie Supabase (groepsruimte)
 
 1. Kopieer `js/config.example.js` → `js/config.js`
