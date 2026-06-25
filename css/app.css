@@ -92,6 +92,8 @@ a.nav-item{color:var(--muted)}
 .pijler-label{font-size:11px;font-weight:500;letter-spacing:.03em;margin-bottom:3px}
 .pijler-desc{font-size:11px;opacity:.8;line-height:1.5}
 .app-hint{font-size:12.5px;color:var(--muted);padding:.6rem .9rem;background:#f5f3ef;border-radius:8px;border-left:3px solid var(--border-strong);font-style:italic}
+.instrument-link{font-size:13px;font-weight:500;color:var(--text);text-decoration:underline;text-underline-offset:2px}
+.instrument-link:hover{color:var(--muted)}
 .kompas-steps{display:flex;align-items:center;gap:0;margin:1.5rem 0;overflow-x:auto;padding-bottom:.5rem}
 .k-step{display:flex;flex-direction:column;align-items:center;flex:1;min-width:56px}
 .k-dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--border-strong);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:var(--muted);background:var(--surface)}

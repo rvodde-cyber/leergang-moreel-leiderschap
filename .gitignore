@@ -13,3 +13,4 @@ docs/incoming/*.tmp
 
 # Beelden wel committen voor deploy
 !instruments/eerlijk-oordeel/beelden/*.jpg
+.vercel

@@ -3,6 +3,7 @@
 const CFG = window.ML_CONFIG || {};
 const SUPABASE_URL = CFG.SUPABASE_URL || "";
 const SUPABASE_KEY = CFG.SUPABASE_KEY || "";
+const LAKMOESPROEF_URL = CFG.LAKMOESPROEF_URL || "https://organisatie-morele-lakmoestest.vercel.app/";
 
 let sessieId = localStorage.getItem("ml_sessie_id");
 if (!sessieId) {
@@ -28,7 +29,7 @@ const modelData = [
 const dagdelen = [
   { num: 1, titel: "Zien en Voelen", subtitel: "Dagdeel 1 — Moreel bewustzijn", vraag: "Zie ik werkelijk wat er op het spel staat — en voel ik wanneer iets niet klopt?", themas: ["Wat is ethisch leiderschap?", "Morele blindheid", "Het innerlijke signaal"], pijlers: [{ key: "hoofd", label: "Hoofd", desc: "Herkennen, waarnemen" }, { key: "buik", label: "Buik", desc: "Wee-gevoel serieus nemen" }], werkvormen: "Praktijkdilemma's, morele spiegel, analyse van eigen casussen", app: "Dagelijkse vraag: Wat heb ik vandaag gezien dat moreel relevant was?" },
   { num: 2, titel: "Wegen en Handelen", subtitel: "Dagdeel 2 — Oordeelsvorming & moed", vraag: "Wat vraagt deze situatie van mij — en doe ik het ook als het spannend wordt?", themas: ["Waardenconflicten", "Morele moed", "Moeilijke gesprekken"], pijlers: [{ key: "hart", label: "Hart", desc: "Afwegen vanuit waarden" }, { key: "handen", label: "Handen", desc: "Daadwerkelijk handelen" }], werkvormen: "Moreel Kompas, rollenspelen, interventietraining", app: "Doorloop een dilemma met het Moreel Kompas" },
-  { num: 3, titel: "Volhouden en Cultuur", subtitel: "Dagdeel 3 — Ruggegraat & ethische cultuur", vraag: "Hoe blijf ik trouw aan mijn waarden onder druk?", themas: ["Morele vermoeidheid", "Integriteit onder druk", "Ethische cultuur versterken"], pijlers: [{ key: "ruggengraat", label: "Ruggegraat", desc: "Volhouden, koers houden" }], werkvormen: "Morele autobiografie, kompasverklaring, cultuurdiagnose", app: "Reflecteer op Volhouden in het dagboek" },
+  { num: 3, titel: "Volhouden en Cultuur", subtitel: "Dagdeel 3 — Ruggegraat & ethische cultuur", vraag: "Hoe blijf ik trouw aan mijn waarden onder druk?", themas: ["Morele vermoeidheid", "Integriteit onder druk", "Ethische cultuur versterken"], pijlers: [{ key: "ruggengraat", label: "Ruggegraat", desc: "Volhouden, koers houden" }], werkvormen: "Morele autobiografie, kompasverklaring, cultuurdiagnose", app: "Facultatief: vul de Morele Lakmoesproef in — 21 stellingen over ethische cultuur in uw organisatie. Vraag collega's hetzelfde te doen.", appLink: { url: LAKMOESPROEF_URL, label: "Open Morele Lakmoesproef" } },
 ];
 
 const dagCells = [
@@ -155,6 +156,7 @@ function renderProgramma() {
         <div class="section-label">Werkvormen</div>
         <p style="font-size:13px;color:var(--muted);margin-bottom:1rem">${d.werkvormen}</p>
         <div class="app-hint">${d.app}</div>
+        ${d.appLink ? `<p style="margin-top:.65rem"><a href="${esc(d.appLink.url)}" class="instrument-link" target="_blank" rel="noopener noreferrer">${esc(d.appLink.label)} ↗</a></p>` : ""}
       </div>
     </div>`
     )

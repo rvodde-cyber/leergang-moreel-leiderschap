@@ -19,6 +19,7 @@ Open `http://localhost:3000` — of dubbelklik `index.html`.
 |-----|-----|
 | **Hoofdapp** | https://leergang-moreel-leiderschap.vercel.app/ |
 | **Eerlijk Oordeel** | https://leergang-moreel-leiderschap.vercel.app/instruments/eerlijk-oordeel/ |
+| **Morele Lakmoesproef** | https://organisatie-morele-lakmoestest.vercel.app/ (link in nav + programma) |
 
 Dashboard: https://vercel.com/rvodde-1442s-projects/leergang-moreel-leiderschap
 
@@ -52,6 +53,7 @@ instruments/eerlijk-oordeel/  ← zelfreflectie-instrument (app klaar; beelden v
 | Moreel kompas | 5 stappen + archetypen |
 | Groei | Temperatuurgrafiek + vergelijking |
 | Groepsruimte | Supabase, anoniem, herkenbaar |
+| Morele Lakmoesproef | Externe organisatiescan (link in nav) |
 
 ## Bron
 
