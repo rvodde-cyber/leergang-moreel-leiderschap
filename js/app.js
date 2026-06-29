@@ -33,11 +33,11 @@ const dagdelen = [
 ];
 
 const dagCells = [
-  { key: "hoofd", label: "Kijken wordt Zien", kleur: "var(--c-hoofd)", placeholder: "Wat heb ik vandaag echt gezien?" },
-  { key: "buik", label: "Voelen", kleur: "var(--c-buik)", placeholder: "Waar kreeg ik morele buikpijn van?" },
-  { key: "hart", label: "Wegen", kleur: "var(--c-hart)", placeholder: "Wat botste er?" },
-  { key: "handen", label: "Handelen", kleur: "var(--c-handen)", placeholder: "Wat heb ik gedaan?" },
-  { key: "ruggengraat", label: "Volhouden", kleur: "var(--c-ruggengraat)", placeholder: "Welke koers heb ik gehouden?" },
+  { key: "hoofd", label: "Kijken wordt Zien", kleur: "var(--c-hoofd)", licht: "var(--c-hoofd-light)", placeholder: "Wat heb ik vandaag echt gezien?" },
+  { key: "buik", label: "Voelen", kleur: "var(--c-buik)", licht: "var(--c-buik-light)", placeholder: "Waar kreeg ik morele buikpijn van?" },
+  { key: "hart", label: "Wegen", kleur: "var(--c-hart)", licht: "var(--c-hart-light)", placeholder: "Wat botste er?" },
+  { key: "handen", label: "Handelen", kleur: "var(--c-handen)", licht: "var(--c-handen-light)", placeholder: "Wat heb ik gedaan?" },
+  { key: "ruggengraat", label: "Volhouden", kleur: "var(--c-ruggengraat)", licht: "var(--c-ruggengraat-light)", placeholder: "Welke koers heb ik gehouden?" },
 ];
 
 const kompasStappen = [
@@ -59,6 +59,8 @@ const elemKleuren = { Hoofd: "var(--c-hoofd)", Buik: "var(--c-buik)", Hart: "var
 const elemLichten = { Hoofd: "var(--c-hoofd-light)", Buik: "var(--c-buik-light)", Hart: "var(--c-hart-light)", Handen: "var(--c-handen-light)", Ruggegraat: "var(--c-ruggengraat-light)" };
 const kleuren = { hoofd: "var(--c-hoofd)", buik: "var(--c-buik)", hart: "var(--c-hart)", handen: "var(--c-handen)", ruggengraat: "var(--c-ruggengraat)" };
 const lichten = { hoofd: "var(--c-hoofd-light)", buik: "var(--c-buik-light)", hart: "var(--c-hart-light)", handen: "var(--c-handen-light)", ruggengraat: "var(--c-ruggengraat-light)" };
+const GROEI_BAR_KLEUREN = ["var(--c-hoofd)", "var(--c-buik)", "var(--c-hart)", "var(--c-handen)", "var(--c-ruggengraat)"];
+const BACKUP_VERSION = 1;
 
 function esc(s) {
   return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -70,6 +72,52 @@ function toast(msg) {
   el.textContent = msg;
   el.classList.add("show");
   setTimeout(() => el.classList.remove("show"), 2800);
+}
+
+function setButtonLoading(btn, loading, loadingText) {
+  if (!btn) return;
+  if (loading) {
+    if (!btn.dataset.originalText) btn.dataset.originalText = btn.textContent;
+    btn.textContent = loadingText || "Bezig…";
+    btn.disabled = true;
+    btn.classList.add("is-loading");
+  } else {
+    btn.textContent = btn.dataset.originalText || btn.textContent;
+    btn.disabled = false;
+    btn.classList.remove("is-loading");
+  }
+}
+
+function formatPostBody(element, tekst) {
+  return `[${element}] ${tekst}`;
+}
+
+function normalizePost(p) {
+  const rawBody = p.body ?? p.tekst ?? "";
+  let element = p.element ?? "Hoofd";
+  let body = rawBody;
+  const tagMatch = rawBody.match(/^\[([^\]]+)\]\s*/);
+  if (!p.element && tagMatch && elementen.includes(tagMatch[1])) {
+    element = tagMatch[1];
+    body = rawBody.slice(tagMatch[0].length);
+  }
+  return {
+    id: p.id,
+    body,
+    element,
+    herkenbaar_count: p.herkenbaar_count ?? 0,
+  };
+}
+
+async function sbErrorMessage(r, fallback) {
+  try {
+    const err = await r.json();
+    if (err?.message) return err.message;
+    if (err?.hint) return `${fallback}: ${err.hint}`;
+  } catch {
+    /* ignore */
+  }
+  return fallback;
 }
 
 function getEntries() {
@@ -177,8 +225,8 @@ function renderDagGrid() {
   grid.innerHTML = dagCells
     .map(
       (c) => `
-    <div class="dag-cell">
-      <div class="dag-cell-head"><div class="dag-dot" style="background:${c.kleur}"></div><div class="dag-cell-label">${c.label}</div></div>
+    <div class="dag-cell" style="background:${c.licht};border-left-color:${c.kleur}">
+      <div class="dag-cell-head"><div class="dag-dot" style="background:${c.kleur}"></div><div class="dag-cell-label" style="color:${c.kleur}">${c.label}</div></div>
       <textarea id="dag-${c.key}" rows="3" placeholder="${c.placeholder}"></textarea>
     </div>`
     )
@@ -264,7 +312,7 @@ function renderGroei() {
       <div class="groei-stat"><div class="groei-stat-val">${first != null && last != null ? (last >= first ? "+" : "") + (last - first) : "—"}</div><div class="groei-stat-label">Verschil begin ↔ nu</div></div>
     </div>
     ${recent.length ? `<div class="section-label">Morele temperatuur (laatste ${recent.length})</div>
-    <div class="groei-chart">${recent.map((e, i) => `<div class="groei-bar-wrap"><div class="groei-bar" style="height:${(e.score / maxScore) * 100}%" title="${e.score}/10"></div><span class="groei-bar-label">${i + 1}</span></div>`).join("")}</div>` : '<p class="loading-msg">Schrijf dagboekentries om je groei te zien.</p>'}
+    <div class="groei-chart">${recent.map((e, i) => `<div class="groei-bar-wrap"><div class="groei-bar" style="height:${(e.score / maxScore) * 100}%;background:${GROEI_BAR_KLEUREN[i % GROEI_BAR_KLEUREN.length]}" title="${e.score}/10"></div><span class="groei-bar-label">${i + 1}</span></div>`).join("")}</div>` : '<p class="loading-msg">Schrijf dagboekentries om je groei te zien.</p>'}
     <p style="font-size:12px;color:var(--subtle);margin-top:1rem">Kompas-sessies opgeslagen: ${kompasCount}</p>`;
 }
 
@@ -330,7 +378,6 @@ function kompasAfronden() {
     </div>`;
   document.getElementById("kompas-save")?.addEventListener("click", slaKompasOpInDagboek);
   document.getElementById("kompas-new")?.addEventListener("click", kompasNieuw);
-  localStorage.setItem("ml_kompas_count", String(Number(localStorage.getItem("ml_kompas_count") || 0) + 1));
 }
 
 function slaKompasOpInDagboek() {
@@ -347,6 +394,7 @@ function slaKompasOpInDagboek() {
     bron: "kompas",
   });
   localStorage.setItem("ml_dagboek", JSON.stringify(opgeslagen));
+  localStorage.setItem("ml_kompas_count", String(Number(localStorage.getItem("ml_kompas_count") || 0) + 1));
   toast("Opgeslagen in dagboek.");
 }
 
@@ -361,7 +409,7 @@ async function sbGet(table, filter) {
   const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${params}`, {
     headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY },
   });
-  if (!r.ok) throw new Error("Kon posts niet laden");
+  if (!r.ok) throw new Error(await sbErrorMessage(r, "Kon posts niet laden"));
   return r.json();
 }
 
@@ -371,16 +419,18 @@ async function sbInsert(table, data) {
     headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY, "Content-Type": "application/json", Prefer: "return=representation" },
     body: JSON.stringify(data),
   });
-  if (!r.ok) throw new Error("Kon niet opslaan");
+  if (!r.ok) throw new Error(await sbErrorMessage(r, "Kon niet opslaan"));
   return r.json();
 }
 
 async function sbDelete(table, filter) {
   const params = new URLSearchParams(filter);
-  return fetch(`${SUPABASE_URL}/rest/v1/${table}?${params}`, {
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${params}`, {
     method: "DELETE",
     headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY },
   });
+  if (!r.ok) throw new Error(await sbErrorMessage(r, "Kon niet verwijderen"));
+  return r;
 }
 
 function renderElemSelect() {
@@ -405,16 +455,19 @@ async function plaatsPost() {
   if (!groepCode) { toast("Vul een groepscode in."); return; }
   if (!SUPABASE_KEY) { toast("Supabase niet geconfigureerd (js/config.js)."); return; }
   const btn = document.getElementById("btn-plaats-post");
-  btn.disabled = true;
+  setButtonLoading(btn, true, "Plaatsen…");
   try {
-    await sbInsert("ml_posts", { groep_code: groepCode, element: gekozenElement, tekst });
+    await sbInsert("ml_posts", {
+      group_code: groepCode,
+      body: formatPostBody(gekozenElement, tekst),
+    });
     document.getElementById("post-tekst").value = "";
     toast("Geplaatst.");
     await laadPosts();
   } catch (e) {
     toast(e.message);
   }
-  btn.disabled = false;
+  setButtonLoading(btn, false);
 }
 
 async function laadPosts() {
@@ -428,9 +481,10 @@ async function laadPosts() {
     container.innerHTML = '<div class="loading-msg">Supabase-key ontbreekt in js/config.js</div>';
     return;
   }
-  container.innerHTML = '<div class="loading-msg">Laden…</div>';
+  container.innerHTML = '<div class="loading-msg is-active">Laden…</div>';
   try {
-    const posts = await sbGet("ml_posts", { groep_code: "eq." + groepCode });
+    const rawPosts = await sbGet("ml_posts", { group_code: "eq." + groepCode });
+    const posts = rawPosts.map(normalizePost);
     const avatars = ["◇", "△", "○", "□", "◈"];
     container.innerHTML = posts.length
       ? posts
@@ -438,23 +492,24 @@ async function laadPosts() {
             (p, i) => `
         <article class="post-card">
           <div class="post-meta"><div class="post-avatar">${avatars[i % avatars.length]}</div><span class="post-anon">Deelnemer · anoniem</span>
-          <span class="post-elem" style="background:${elemLichten[p.element]};color:${elemKleuren[p.element]}">${esc(p.element)}</span></div>
-          <div class="post-text">${esc(p.tekst)}</div>
+          <span class="post-elem" style="background:${elemLichten[p.element] || "var(--surface-muted)"};color:${elemKleuren[p.element] || "var(--muted)"}">${esc(p.element)}</span></div>
+          <div class="post-text">${esc(p.body)}</div>
           <button type="button" class="post-herk ${herkenbarePosts.includes(p.id) ? "active" : ""}" data-id="${p.id}">Herkenbaar${p.herkenbaar_count > 0 ? " · " + p.herkenbaar_count : ""}</button>
         </article>`
           )
           .join("")
       : '<div class="loading-msg">Nog geen ervaringen in deze groep.</div>';
     container.querySelectorAll(".post-herk").forEach((btn) => {
-      btn.addEventListener("click", () => toggleHerkenbaar(btn.dataset.id));
+      btn.addEventListener("click", () => toggleHerkenbaar(btn.dataset.id, btn));
     });
   } catch (e) {
     container.innerHTML = `<div class="loading-msg">${esc(e.message)}</div>`;
   }
 }
 
-async function toggleHerkenbaar(postId) {
+async function toggleHerkenbaar(postId, btn) {
   const was = herkenbarePosts.includes(postId);
+  if (btn) setButtonLoading(btn, true, "…");
   try {
     if (was) {
       herkenbarePosts = herkenbarePosts.filter((id) => id !== postId);
@@ -466,14 +521,68 @@ async function toggleHerkenbaar(postId) {
     localStorage.setItem("ml_herkenbaar", JSON.stringify(herkenbarePosts));
     await laadPosts();
   } catch (e) {
+    if (was) herkenbarePosts.push(postId);
+    else herkenbarePosts = herkenbarePosts.filter((id) => id !== postId);
     toast(e.message);
+    if (btn) setButtonLoading(btn, false);
   }
+}
+
+function exportDagboek() {
+  const payload = {
+    version: BACKUP_VERSION,
+    app: "moreel-leiderschap",
+    exportedAt: new Date().toISOString(),
+    entries: getEntries(),
+    kompasCount: Number(localStorage.getItem("ml_kompas_count") || 0),
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `moreel-leiderschap-dagboek-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast("Backup gedownload.");
+}
+
+function importDagboekFromFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(reader.result);
+      const entries = Array.isArray(data) ? data : data.entries;
+      if (!Array.isArray(entries)) throw new Error("Geen geldige entries gevonden.");
+      const huidig = getEntries();
+      const bevestig = huidig.length
+        ? confirm(`Je hebt ${huidig.length} entries. Importeren voegt ${entries.length} entries toe bovenaan. Doorgaan?`)
+        : true;
+      if (!bevestig) return;
+      localStorage.setItem("ml_dagboek", JSON.stringify([...entries, ...huidig]));
+      if (data.kompasCount != null) {
+        localStorage.setItem("ml_kompas_count", String(data.kompasCount));
+      }
+      renderEntries();
+      if (document.getElementById("view-groei")?.classList.contains("active")) renderGroei();
+      toast(`${entries.length} entries geïmporteerd.`);
+    } catch (e) {
+      toast(e.message || "Import mislukt — controleer het bestand.");
+    }
+  };
+  reader.readAsText(file);
+}
+
+function printDagboek() {
+  showView("dagboek", document.querySelector('.nav-item[data-view="dagboek"]'));
+  setTimeout(() => window.print(), 150);
 }
 
 function init() {
   const codeInput = document.getElementById("groep-code-input");
   if (codeInput) {
     codeInput.value = groepCode;
+    codeInput.addEventListener("input", slaGroepOp);
     codeInput.addEventListener("change", slaGroepOp);
     codeInput.addEventListener("blur", slaGroepOp);
   }
@@ -486,6 +595,15 @@ function init() {
   document.getElementById("btn-save-entry")?.addEventListener("click", slaEntryOp);
   document.getElementById("btn-clear-entry")?.addEventListener("click", leegDagboek);
   document.getElementById("btn-plaats-post")?.addEventListener("click", plaatsPost);
+  document.getElementById("btn-export-dagboek")?.addEventListener("click", exportDagboek);
+  document.getElementById("btn-import-dagboek")?.addEventListener("click", () => {
+    document.getElementById("import-dagboek-file")?.click();
+  });
+  document.getElementById("import-dagboek-file")?.addEventListener("change", (e) => {
+    importDagboekFromFile(e.target.files?.[0]);
+    e.target.value = "";
+  });
+  document.getElementById("btn-print-dagboek")?.addEventListener("click", printDagboek);
 
   renderModel();
   selectModelStap(0);

@@ -34,14 +34,22 @@ export async function fetchPosts(groupCode, limit = 20) {
 
   const { data, error } = await query;
   if (error) throw error;
-  return { data: data ?? [], offline: false };
+  const normalized = (data ?? []).map((p) => {
+    const rawBody = p.body ?? "";
+    const tagMatch = rawBody.match(/^\[([^\]]+)\]\s*/);
+    if (tagMatch) {
+      return { ...p, element: tagMatch[1], body: rawBody.slice(tagMatch[0].length) };
+    }
+    return p;
+  });
+  return { data: normalized, offline: false };
 }
 
-export async function createPost(body, groupCode) {
+export async function createPost(body, groupCode, element) {
   const supabase = await getSupabase();
   if (!supabase) throw new Error("Supabase niet geconfigureerd");
 
-  const row = { body };
+  const row = { body: element ? `[${element}] ${body}` : body };
   if (groupCode) row.group_code = groupCode;
 
   const { data, error } = await supabase.from("ml_posts").insert(row).select().single();

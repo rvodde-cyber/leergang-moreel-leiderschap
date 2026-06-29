@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Moreel Leiderschap — Van bewustzijn naar moedige praktijk</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
@@ -209,6 +209,16 @@
     <div class="btn-row">
       <button type="button" class="btn btn-primary" id="btn-save-entry">Opslaan</button>
       <button type="button" class="btn" id="btn-clear-entry">Leegmaken</button>
+    </div>
+    <div class="backup-panel">
+      <div class="section-label">Backup &amp; herstel</div>
+      <p class="backup-hint">Download een kopie van je dagboek of herstel entries op een ander apparaat.</p>
+      <div class="btn-row">
+        <button type="button" class="btn" id="btn-export-dagboek">Backup downloaden</button>
+        <button type="button" class="btn" id="btn-import-dagboek">Backup importeren</button>
+        <button type="button" class="btn" id="btn-print-dagboek">Afdrukken / PDF</button>
+        <input type="file" id="import-dagboek-file" accept=".json,application/json" hidden>
+      </div>
     </div>
     <div class="entry-list">
       <div class="section-label" style="margin-top:1.5rem">Eerdere entries</div>
