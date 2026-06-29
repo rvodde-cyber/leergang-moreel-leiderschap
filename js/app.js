@@ -578,6 +578,109 @@ function printDagboek() {
   setTimeout(() => window.print(), 150);
 }
 
+const WHEEL_STEPS = [
+  { idx: 0, num: 1, label: "Zien", fill: "#185FA5", stroke: "#185FA5", text: "#ffffff" },
+  { idx: 1, num: 2, label: "Voelen", fill: "#FFF8F0", stroke: "#854F0B", text: "#854F0B" },
+  { idx: 2, num: 3, label: "Wegen", fill: "#FBEAF0", stroke: "#993556", text: "#993556" },
+  { idx: 3, num: 4, label: "Handelen", fill: "#E1F5EE", stroke: "#0F6E56", text: "#0F6E56" },
+  { idx: 4, num: 5, label: "Volhouden", fill: "#FAEEDA", stroke: "#993C1D", text: "#993C1D" },
+];
+
+function wheelNodePos(i, cx, cy, r) {
+  const rad = ((-90 + i * 72) * Math.PI) / 180;
+  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+}
+
+function renderWelcomeWheel() {
+  const slot = document.getElementById("welcome-model-wheel");
+  if (!slot) return;
+
+  const cx = 180;
+  const cy = 180;
+  const orbit = 112;
+  const nodeR = 32;
+  const starColors = ["#993C1D", "#6B4C9A", "#0F6E56", "#993556", "#854F0B"];
+
+  const starTris = starColors
+    .map((color, i) => {
+      const a = ((-90 + i * 72) * Math.PI) / 180;
+      const x1 = cx + 58 * Math.cos(a);
+      const y1 = cy + 58 * Math.sin(a);
+      const x2 = cx + 38 * Math.cos(a + 0.45);
+      const y2 = cy + 38 * Math.sin(a + 0.45);
+      const x3 = cx + 38 * Math.cos(a - 0.45);
+      const y3 = cy + 38 * Math.sin(a - 0.45);
+      return `<polygon points="${x1},${y1} ${x2},${y2} ${x3},${y3}" fill="${color}" opacity=".85"/>`;
+    })
+    .join("");
+
+  const dashedLines = WHEEL_STEPS.map((_, i) => {
+    const p = wheelNodePos(i, cx, cy, orbit);
+    return `<line x1="${cx}" y1="${cy}" x2="${p.x}" y2="${p.y}" stroke="#d5cfc6" stroke-width="1" stroke-dasharray="4 4"/>`;
+  }).join("");
+
+  const arrows = WHEEL_STEPS.map((_, i) => {
+    const a1 = ((-90 + i * 72 + 18) * Math.PI) / 180;
+    const a2 = ((-90 + (i + 1) * 72 - 18) * Math.PI) / 180;
+    const r = orbit + 8;
+    const x1 = cx + r * Math.cos(a1);
+    const y1 = cy + r * Math.sin(a1);
+    const x2 = cx + r * Math.cos(a2);
+    const y2 = cy + r * Math.sin(a2);
+    return `<path d="M ${x1} ${y1} A ${r} ${r} 0 0 1 ${x2} ${y2}" fill="none" stroke="#c4bdb2" stroke-width="3" marker-end="url(#wheel-arrow)"/>`;
+  }).join("");
+
+  const nodes = WHEEL_STEPS.map((step) => {
+    const p = wheelNodePos(step.idx, cx, cy, orbit);
+    const solid = step.fill === step.stroke;
+    return `
+      <g class="wheel-step" data-idx="${step.idx}" role="button" tabindex="0" aria-label="${step.num} ${step.label}">
+        <circle cx="${p.x}" cy="${p.y}" r="${nodeR}" fill="${step.fill}" stroke="${step.stroke}" stroke-width="${solid ? 0 : 2.5}"/>
+        <text x="${p.x}" y="${p.y - 5}" text-anchor="middle" fill="${step.text}" font-family="DM Sans, system-ui, sans-serif" font-size="13" font-weight="600">${step.num}</text>
+        <text x="${p.x}" y="${p.y + 12}" text-anchor="middle" fill="${step.text}" font-family="DM Sans, system-ui, sans-serif" font-size="11" font-weight="500">${step.label}</text>
+      </g>`;
+  }).join("");
+
+  slot.innerHTML = `
+    <svg viewBox="0 0 360 360" role="img" aria-labelledby="wheel-title wheel-desc">
+      <title id="wheel-title">Moreel Vakmanschap-model</title>
+      <desc id="wheel-desc">Vijf stappen — Zien, Voelen, Wegen, Handelen, Volhouden — rond de kern met gesprekskaarten</desc>
+      <defs>
+        <marker id="wheel-arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+          <path d="M0,0 L8,4 L0,8 Z" fill="#c4bdb2"/>
+        </marker>
+      </defs>
+      <circle cx="${cx}" cy="${cy}" r="${orbit + 14}" fill="none" stroke="#e0dbd2" stroke-width="1"/>
+      ${starTris}
+      ${dashedLines}
+      ${arrows}
+      <g class="wheel-kern" role="button" tabindex="0" aria-label="Kern — gesprekskaarten">
+        <circle cx="${cx}" cy="${cy}" r="46" fill="#F3EEFC" stroke="#6B4C9A" stroke-width="3"/>
+        <text x="${cx}" y="${cy - 14}" text-anchor="middle" fill="#185FA5" font-family="DM Sans, system-ui, sans-serif" font-size="15" font-weight="700">KERN</text>
+        <text x="${cx}" y="${cy + 2}" text-anchor="middle" fill="#185FA5" font-family="DM Sans, system-ui, sans-serif" font-size="9.5" font-weight="500">Gesprekskaarten</text>
+        <text x="${cx}" y="${cy + 14}" text-anchor="middle" fill="#185FA5" font-family="DM Sans, system-ui, sans-serif" font-size="7.5" font-weight="400">Morele situaties</text>
+        <text x="${cx}" y="${cy + 24}" text-anchor="middle" fill="#185FA5" font-family="DM Sans, system-ui, sans-serif" font-size="7.5" font-weight="400">uit de praktijk</text>
+      </g>
+      ${nodes}
+    </svg>`;
+
+  slot.querySelectorAll(".wheel-step, .wheel-kern").forEach((el) => {
+    const go = () => {
+      const idx = el.classList.contains("wheel-kern") ? 0 : Number(el.dataset.idx);
+      actieveModelStap = idx;
+      showView("model", document.querySelector('.nav-item[data-view="model"]'));
+      selectModelStap(idx);
+    };
+    el.addEventListener("click", go);
+    el.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        go();
+      }
+    });
+  });
+}
+
 function init() {
   const codeInput = document.getElementById("groep-code-input");
   if (codeInput) {
@@ -613,6 +716,7 @@ function init() {
   renderKompas();
   renderElemSelect();
   updateGroepDisplay();
+  renderWelcomeWheel();
 
   document.getElementById("btn-welcome-start")?.addEventListener("click", () => {
     showView("model", document.querySelector('.nav-item[data-view="model"]'));
